@@ -1,0 +1,4 @@
+name: PlayerViser
+main: org.sp.playerviser.PlayerViser
+version: 0.1
+commands:
