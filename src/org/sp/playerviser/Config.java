@@ -31,6 +31,7 @@ public class Config {
         defined.add("player_command_preprocess");
         defined.add("player_chat");
         defined.add("player_pickup_item");
+        defined.add("player_interact_entity");
         defined.add("player_drop_item");
         config.getStringList("log", defined);
         

@@ -19,6 +19,7 @@ public class PlayerViser extends JavaPlugin{
     public PluginManager pluginman;
 
     public GeneralPlayerListener gpl = new GeneralPlayerListener(this);
+    public GeneralEntityListener gel = new GeneralEntityListener(this);
     public Config conf;
 
     public static boolean debug = true;
@@ -28,8 +29,13 @@ public class PlayerViser extends JavaPlugin{
         pluginman = server.getPluginManager();
         conf = new Config(new File(this.getDataFolder() + "/config.yml"));
         for (Object logger : conf.loggers) {
-            Log.debug(String.format("Event %s registered!", logger.toString()));
-            pluginman.registerEvent((Event.Type) logger, gpl, Event.Priority.Lowest, this);
+            if (logger.toString().startsWith("PLAYER")) {
+                Log.debug(String.format("Event %s registered with player listener!", logger.toString()));
+                pluginman.registerEvent((Event.Type) logger, gpl, Event.Priority.Lowest, this);
+            } else if (logger.toString().startsWith("ENTITY")) {
+                Log.debug(String.format("Event %s registered with entity listener!", logger.toString()));
+                pluginman.registerEvent((Event.Type) logger, gel, Event.Priority.Lowest, this);
+            }
         }
     }
 }

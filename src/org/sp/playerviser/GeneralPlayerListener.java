@@ -1,5 +1,7 @@
 package org.sp.playerviser;
 
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.player.*;
 
 /**
@@ -28,6 +30,16 @@ public class GeneralPlayerListener extends PlayerListener {
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event){
         if (playerViser.conf.getPlayers().contains(event.getPlayer().getName().toLowerCase()))
             Viser.onPlayerInteractEntity(event.getPlayer(), event.getRightClicked());
+    }
+    public void onPlayerInteract(PlayerInteractEvent event){
+        if (playerViser.conf.getPlayers().contains(event.getPlayer().getName().toLowerCase()))
+            if (event.getClickedBlock() != null && event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                Viser.onPlayerInteract(event.getPlayer(), event.getClickedBlock().getType());
+
+    }
+    public void onPlayerTeleport(PlayerTeleportEvent event){
+        if (playerViser.conf.getPlayers().contains(event.getPlayer().getName().toLowerCase()))
+            Viser.onPlayerTeleport(event.getPlayer(), event.getTo());
     }
 
 }

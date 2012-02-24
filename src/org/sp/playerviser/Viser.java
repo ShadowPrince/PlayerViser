@@ -1,6 +1,7 @@
 package org.sp.playerviser;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -36,10 +37,27 @@ public class Viser {
     }
     public static void onPlayerInteractEntity(Player player, Entity entity) {
         String template = playerTemplate("Player $player interact $entity at $xyz", player)
-                .replace("$entity", "" + entity.getEntityId());
-
+                .replace("$entity", "" + entity.getEntityId())
+                ;
+        Log.log(template);
     }
+    public static void onPlayerInteract(Player player, Material block){
+        String template = playerTemplate("Player $player interact $block at $xyz", player)
+                .replace("$block", block.name());
 
+        Log.log(template);
+    }
+    public static void onPlayerDeath(Player player){
+        String template = playerTemplate("Player $player death at $xyz", player);
+        
+        Log.log(template);
+    }
+    public static void onPlayerTeleport(Player player, Location location) {
+        String template = playerTemplate("Player $player teleported from $xyz to $nxyz", player)
+                .replace("$nxyz", (int) location.getX()+","+ (int) location.getY()+","+ (int) location.getZ());
+
+        Log.log(template);
+    }
     public static String playerTemplate(String template, Player player){
         Location location = player.getLocation();
         return template
