@@ -1,11 +1,14 @@
 package org.sp.playerviser;
 
 import org.bukkit.Server;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 
 
 /**
@@ -27,15 +30,9 @@ public class PlayerViser extends JavaPlugin{
     public void onEnable(){
         server = this.getServer();
         pluginman = server.getPluginManager();
-        conf = new Config(new File(this.getDataFolder() + "/config.yml"));
-        for (Object logger : conf.loggers) {
-            if (logger.toString().startsWith("PLAYER")) {
-                Log.debug(String.format("Event %s registered with player listener!", logger.toString()));
-                pluginman.registerEvent((Event.Type) logger, gpl, Event.Priority.Lowest, this);
-            } else if (logger.toString().startsWith("ENTITY")) {
-                Log.debug(String.format("Event %s registered with entity listener!", logger.toString()));
-                pluginman.registerEvent((Event.Type) logger, gel, Event.Priority.Lowest, this);
-            }
-        }
+        getConfig().options().copyDefaults(true);
+        saveConfig();
+        conf = new Config(getConfig());
+        pluginman.registerEvents(new GeneralPlayerListener(this), this);
     }
 }

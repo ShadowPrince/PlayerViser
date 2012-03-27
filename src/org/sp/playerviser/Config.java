@@ -1,10 +1,14 @@
 package org.sp.playerviser;
 
 
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.util.config.Configuration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
@@ -15,52 +19,27 @@ import java.util.Vector;
  * at IntelliJ IDEA.
  */
 public class Config {
-    Configuration config;
+    static FileConfiguration config;
     List loggers = new Vector(1);
-    public Config(File path){
-        config = new Configuration(path);
-        config.load();
-        setDefaults();
-        config.save();
-        prepareLoggers();
-        preparePlayers();
+    public Config(FileConfiguration _config) {
+        config = _config;
     }
 
     public void setDefaults(){
-        List defined = new Vector(1);
-        defined.add("player_command_preprocess");
-        defined.add("player_chat");
-        defined.add("player_pickup_item");
-        defined.add("player_interact_entity");
-        defined.add("player_drop_item");
-        config.getStringList("log", defined);
-        
-        defined = new Vector(1);
-        defined.add("5Shadow7Prince");
-        config.getStringList("players", defined);
+        config.getStringList("log");
+        config.getStringList("players");
 
     }
-
-    public List getPlayers() {
+    public static boolean isLogged(String eventtype){
+        return config.getList("log").contains(eventtype.toLowerCase());
+    }
+    public static boolean isLogged(Player player) {
+        if (!player.hasPermission("playerviser.log"))
+            return Config.getPlayers().contains(player.getName().toLowerCase());
+        else return config.getBoolean("permission-log");
+    }
+    public static List getPlayers() {
         return config.getList("players");
     }
-    public void preparePlayers(){
-        List players = new Vector(1);
-        for (Object player : config.getList("players")) {
-            players.add(player.toString().toLowerCase());            
-        }
-        config.setProperty("players", players);
-    }
-    public void prepareLoggers(){
-        List defloggers = config.getList("log");
-        for (Object logger : defloggers) {
-            try {
-                loggers.add(Event.Type.valueOf(logger.toString().toUpperCase()));
-            } catch (IllegalArgumentException iae){
-                Log.warning(String.format("Logger %s not found!", logger.toString()));
-            } catch (NullPointerException npe) {
-                Log.warning(String.format("Logger %s not found!", logger.toString()));
-            }
-        }
-    }
+
 }

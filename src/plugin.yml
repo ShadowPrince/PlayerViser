@@ -1,4 +1,6 @@
 name: PlayerViser
 main: org.sp.playerviser.PlayerViser
-version: 0.1
-commands:
+version: 1.0
+permissions:
+    playerviser.log:
+        default: false

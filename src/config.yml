@@ -1,0 +1,10 @@
+# list of players and event-types in lower case!
+permissions-log: true
+players:
+- shadowprince
+log:
+- playercommandpreprocessevent
+- playerpickupitemevent
+- playerdropitemevent
+- playerteleportevent
+- entitydeathevent
